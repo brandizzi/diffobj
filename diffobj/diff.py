@@ -8,10 +8,11 @@ def diff(old, new):
         new_value = getattr(new, attr)
         if attr not in old_attributes:
            operations.append( ('create', attr, new_value) )
+        else:
+            old_attributes.remove(attr)
 
     for attr in old_attributes:
-        if attr not in new_attributes:
-           operations.append( ('drop', attr) )
+       operations.append( ('drop', attr) )
 
     return operations
 

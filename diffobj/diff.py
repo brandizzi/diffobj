@@ -5,13 +5,9 @@ def diff(old, new):
     new_attributes = [a for a in dir(new) if not a.startswith('_')]
 
     for attr in new_attributes:
-        operation = None
         new_value = getattr(new, attr)
-
         if attr not in old_attributes:
-            operation = ('create', attr, new_value)
-
-        operations.append(operation)
+           operations.append( ('create', attr, new_value) )
 
     return operations
 

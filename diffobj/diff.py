@@ -1,17 +1,17 @@
 
 def diff(old, new):
     operations = []
-    old_attributes = [a for a in dir(old) if not a.startswith('_')]
-    new_attributes = [a for a in dir(new) if not a.startswith('_')]
+    old_attrs = [a for a in dir(old) if not a.startswith('_')]
+    new_attrs = [a for a in dir(new) if not a.startswith('_')]
 
-    for attr in new_attributes:
+    for attr in new_attrs:
         new_value = getattr(new, attr)
-        if attr not in old_attributes:
+        if attr not in old_attrs:
            operations.append( ('create', attr, new_value) )
         else:
-            old_attributes.remove(attr)
+            old_attrs.remove(attr)
 
-    for attr in old_attributes:
+    for attr in old_attrs:
        operations.append( ('drop', attr) )
 
     return operations

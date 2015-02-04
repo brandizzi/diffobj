@@ -23,3 +23,13 @@ class DiffObjTest(unittest.TestCase):
         diffobj.patch(old, diff)
 
         self.assertFalse(hasattr(old, 'attr'))
+
+    def test_update_attribute(self):
+        old = Tabula()
+        new = Tabula()
+        old.attr = 3
+        new.attr = 4
+        diff = diffobj.diff(old, new)
+        diffobj.patch(old, diff)
+
+        self.assertEquals(4, old.attr)

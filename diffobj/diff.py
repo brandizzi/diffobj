@@ -9,6 +9,9 @@ def diff(old, new):
         if attr not in old_attrs:
            operations.append( ('create', attr, new_value) )
         else:
+            old_value = getattr(old, attr)
+            if old_value != new_value:
+                operations.append( ('update', attr, new_value) )
             old_attrs.remove(attr)
 
     for attr in old_attrs:
@@ -19,7 +22,7 @@ def diff(old, new):
 def patch(base, diff):
     for operation in diff:
         operator, attr = operation[:2]
-        if operator == 'create':
+        if operator in ('create', 'update'):
             value = operation[2]
             setattr(base, attr, value)
         elif operator == 'drop':

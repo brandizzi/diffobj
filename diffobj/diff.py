@@ -32,7 +32,7 @@ def patch(base, diff):
             _drop_attr(base, *operation[1:])
 
 def _create_attr(obj, attr, new_value):
-    if hasattr(obj, attr):
+    if hasattr(obj, attr) and getattr(obj, attr) != new_value:
         raise Conflict('Attribute {0} already exists.'.format(attr))
 
     setattr(obj, attr, new_value)

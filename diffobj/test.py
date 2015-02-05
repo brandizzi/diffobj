@@ -86,3 +86,13 @@ class DiffObjTest(unittest.TestCase):
         diffobj.patch(old, diff)        
         self.assertFalse(hasattr(old, 'attr'))
 
+    def test_nop_if_creating_non_existent_attribute(self):
+        old = Tabula()
+        new = Tabula()
+        new.attr = 3
+        diff = diffobj.diff(old, new)
+
+        old.attr = 3
+        diffobj.patch(old, diff)
+        self.assertEquals(3, old.attr)
+

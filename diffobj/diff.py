@@ -29,6 +29,8 @@ def patch(base, diff):
                 raise Conflict('Attribute {0} already exists.'.format(attr))
             setattr(base, attr, value)
         elif operator == 'update':
+            if not hasattr(base, attr):
+                raise Conflict('Attribute {0} does not exist.'.format(attr))
             curr_value = getattr(base, attr)
             old_value, new_value = operation[2:4]
             if old_value != curr_value:

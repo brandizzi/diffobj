@@ -75,3 +75,14 @@ class DiffObjTest(unittest.TestCase):
         old.attr = 5
         with self.assertRaises(diffobj.Conflict):
             diffobj.patch(old, diff)
+
+    def test_nop_if_dropping_non_existent_attribute(self):
+        old = Tabula()
+        new = Tabula()
+        old.attr = 3
+        diff = diffobj.diff(old, new)
+
+        delattr(old, 'attr')
+        diffobj.patch(old, diff)        
+        self.assertFalse(hasattr(old, 'attr'))
+

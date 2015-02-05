@@ -65,3 +65,13 @@ class DiffObjTest(unittest.TestCase):
         delattr(old, 'attr')
         with self.assertRaises(diffobj.Conflict):
             diffobj.patch(old, diff)
+
+    def test_error_if_dropping_different_old_value(self):
+        old = Tabula()
+        new = Tabula()
+        old.attr = 3
+        diff = diffobj.diff(old, new)
+
+        old.attr = 5
+        with self.assertRaises(diffobj.Conflict):
+            diffobj.patch(old, diff)

@@ -15,7 +15,8 @@ def diff(old, new):
             old_attrs.remove(attr)
 
     for attr in old_attrs:
-       operations.append( ('drop', attr) )
+       old_value = getattr(old, attr)
+       operations.append( ('drop', attr, old_value) )
 
     return operations
 
@@ -51,7 +52,16 @@ def _update_attr(obj, attr, old_value, new_value):
 
     setattr(obj, attr, new_value)
 
-def _drop_attr(obj, attr):
+def _drop_attr(obj, attr, old_value):
+    curr_value = getattr(obj, attr)
+
+    if old_value != curr_value:
+        raise Conflict(
+            'Attribute {0} is {1} - expected {2}.'.format(
+                attr, curr_value, old_value
+            )
+        )
+
     delattr(obj, attr)
 
 class Conflict(Exception):

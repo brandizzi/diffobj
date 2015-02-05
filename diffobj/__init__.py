@@ -1,1 +1,1 @@
-from .diff import diff, patch
+from .diff import diff, patch, Conflict

@@ -23,7 +23,12 @@ def patch(base, diff):
     for operation in diff:
         operator, attr = operation[:2]
         if operator in ('create', 'update'):
+            if (operator == 'create') and hasattr(base, attr):
+                raise Conflict('Attribute {0} already exists.'.format(attr))
             value = operation[2]
             setattr(base, attr, value)
         elif operator == 'drop':
             delattr(base, attr)
+
+class Conflict(Exception):
+    pass

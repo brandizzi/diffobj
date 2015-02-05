@@ -33,3 +33,13 @@ class DiffObjTest(unittest.TestCase):
         diffobj.patch(old, diff)
 
         self.assertEquals(4, old.attr)
+
+    def test_error_if_creating_already_existing_attribute(self):
+        old = Tabula()
+        new = Tabula()
+        new.attr = 3
+        diff = diffobj.diff(old, new)
+
+        old.attr = 4
+        with self.assertRaises(diffobj.Conflict):
+            diffobj.patch(old, diff)

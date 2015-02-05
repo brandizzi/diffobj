@@ -22,14 +22,14 @@ def diff(old, new):
 
 def patch(base, diff):
     for operation in diff:
-        operator = operation[0]
+        operator, args = operation[0], operation[1:]
 
         if operator == 'create':
-            _create_attr(base, *operation[1:])
+            _create_attr(base, *args)
         elif operator == 'update':
-            _update_attr(base, *operation[1:])
+            _update_attr(base, *args)
         elif operator == 'drop':
-            _drop_attr(base, *operation[1:])
+            _drop_attr(base, *args)
 
 def _create_attr(obj, attr, new_value):
     if hasattr(obj, attr) and getattr(obj, attr) != new_value:

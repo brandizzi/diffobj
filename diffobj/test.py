@@ -43,3 +43,14 @@ class DiffObjTest(unittest.TestCase):
         old.attr = 4
         with self.assertRaises(diffobj.Conflict):
             diffobj.patch(old, diff)
+
+    def test_error_if_updating_different_old_value(self):
+        old = Tabula()
+        new = Tabula()
+        old.attr = 3
+        new.attr = 4
+        diff = diffobj.diff(old, new)
+
+        old.attr = 5
+        with self.assertRaises(diffobj.Conflict):
+            diffobj.patch(old, diff)

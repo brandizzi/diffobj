@@ -21,27 +21,38 @@ def diff(old, new):
 
 def patch(base, diff):
     for operation in diff:
-        operator, attr = operation[:2]
+        operator = operation[0]
 
         if operator == 'create':
-            value = operation[2]
-            if hasattr(base, attr):
-                raise Conflict('Attribute {0} already exists.'.format(attr))
-            setattr(base, attr, value)
+            _create_attr(base, *operation[1:])
         elif operator == 'update':
-            if not hasattr(base, attr):
-                raise Conflict('Attribute {0} does not exist.'.format(attr))
-            curr_value = getattr(base, attr)
-            old_value, new_value = operation[2:4]
-            if old_value != curr_value:
-                raise Conflict(
-                    'Attribute {0} is {1} - expected {2}.'.format(
-                        attr, curr_value, old_value
-                    )
-                )
-            setattr(base, attr, new_value)
+            _update_attr(base, *operation[1:])
         elif operator == 'drop':
-            delattr(base, attr)
+            _drop_attr(base, *operation[1:])
+
+def _create_attr(obj, attr, new_value):
+    if hasattr(obj, attr):
+        raise Conflict('Attribute {0} already exists.'.format(attr))
+
+    setattr(obj, attr, new_value)
+
+def _update_attr(obj, attr, old_value, new_value):
+    if not hasattr(obj, attr):
+        raise Conflict('Attribute {0} does not exist.'.format(attr))
+
+    curr_value = getattr(obj, attr)
+
+    if old_value != curr_value:
+        raise Conflict(
+            'Attribute {0} is {1} - expected {2}.'.format(
+                attr, curr_value, old_value
+            )
+        )
+
+    setattr(obj, attr, new_value)
+
+def _drop_attr(obj, attr):
+    delattr(obj, attr)
 
 class Conflict(Exception):
     pass
